@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block head_content %}
+<title>@{{ request.user.username }}</title>
+{% endblock %}
+
+{% block container %}
+
+    <div class="container mb-5" style="margin-top: 8em;">
+        <div class="row">
+            <div class="col-sm-4 d-flex justify-content-center">
+                <img src="{{ user.profile.foto.url }}" alt="@{{ user.username}}" class="rounded-circle" width="150px" />
+            </div>
+            <div class="col-sm-8">
+                <h2 style="font-weight: 100;">
+                    {% if request.user == user %}
+                        {{ user.username }}
+                        <a
+                            href="{% url "update_profile" %}"
+                            class="ml-5 btn btn-sm btn-outline-info"
+                        >
+                            Edit profile
+                        </a>
+                    {% else %}
+                        <form action="{% url 'follow' %}" method="POST">
+                            {% csrf_token %}
+                            {{ user.username }}
+                            <input type="hidden" name="id" value="{{ user.id }}"></input>
+                            <button type="submit" class="ml-5 btn btn-sm btn-primary">
+                                Follow
+                            </button>
+                        </form>
+                    {% endif %}
+                </h2>
+                <div class="row mt-2" style="font-size: 1.2em">
+                    <div class="col-sm-4">
+                        <b>{{ posts }}</b> posts
+                    </div>
+                    <div class="col-sm-4">
+                        <b>{{ followers }}</b> followers
+                    </div>
+                    <div class="col-sm-4">
+                        <b>{{ following }}</b> following
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        <p>{{ user.profile.biografia }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            {% for prof in profile %}
+                <div class="col-sm-3">
+                    <img width="252" height="252" src="{{ prof.foto.url }}" alt="{{ prof.titulo }}">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <hr>
+
+{% endblock %}

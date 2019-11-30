@@ -1,0 +1,26 @@
+{% extends "users/base.html" %}
+{% block head_content %}
+<title>Instagram Iniciar Sesión</title>
+{% endblock %}
+
+{% block container %}
+	
+	{% if error %}
+		<p class="alert alert-danger">{{ error }}</p>
+	{% endif %}
+
+	<form action="{% url "login" %}" method='POST'>
+		{% csrf_token %}
+		<div class="form-group">
+			<input type="text" placeholder="Username" name="username" class="form-control" />
+		</div>
+		<div class="form-group">
+			<input type="password" placeholder="Password" name="password" class="form-control" />
+		</div>		
+		<button class="btn btn-primary btn-block mt-5" type="submit">Iniciar Sesión</button>
+	</form>
+
+	<p class="mt-4">
+		¿No tienes una cuenta? <a href="{% url 'signup' %}">Sign up here</a>
+	</p>
+{% endblock%}

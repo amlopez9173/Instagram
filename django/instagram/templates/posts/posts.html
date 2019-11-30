@@ -1,0 +1,72 @@
+
+{% extends "base.html" %}
+
+{% block head_content %}
+    <title>Instagram</title>
+{% endblock%}
+
+{% block container %}
+
+    <style type="text/css">
+        .boton {
+          background: none!important;
+          border: none;
+          padding: 0!important;
+          /*optional*/
+          font-family: arial, sans-serif;
+          /*input has OS specific font-family*/
+          color: #069;
+          text-decoration: underline;
+          cursor: pointer;
+        }}
+    </style>
+    <div class="container">
+        <div class="row">
+
+            {% for post in posts %}
+            <div class="col-sm-12 col-md-8 offset-md-2 mt-5 p-0 post-container">
+                <div class="media pt-3 pl-3 pb-1">
+                    <img class="mr-3 rounded-circle" height="35" src="{{ post.profile.foto.url }}" alt="{{ post.user.get_full_name }}">
+                    <div class="media-body">
+                        <p style="margin-top: 5px;">{{ post.user.get_full_name  }}</p>
+                    </div>
+                </div>
+
+                <img style="width: 100%;" src="{{ post.foto.url }}" alt="{{ post.titulo }}">
+
+                <div style="padding-left: 10px;">
+                    <p class="mt-1 ml-2" >
+                        <form action="{% url 'like' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ post.id }}"></input>
+                            <button type="submit" class="boton" style="color: #000; font-size: 20px;">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            {% for like in likes %}
+                                {% if post.id == like.0 %}
+                                    {{ like.1 }} likes
+                                {% endif %}
+                            {% endfor %}
+                        </form>
+                    </p>
+                    <p class="mt-1 ml-2" >
+                        {% for comment in comments %}
+                            {% if post.id == comment.0 %}
+                                <b>{{ comment.1 }}: </b>{{ comment.2 }}<br>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                    <form action="{% url 'hacer_comentario' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="post" value="{{ post.id }}">
+                        <input type="text" name="message" class="form-control" style="height: 30px; font-size: 10px;">
+                    </form>
+                </div>
+                <p class="ml-2 mt-0 mb-2">
+                    <b>{{ post.titulo }}</b> - <small>{{ post.created }}</small>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
